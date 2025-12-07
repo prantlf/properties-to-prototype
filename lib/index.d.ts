@@ -100,6 +100,17 @@ interface UpdateClassDeclarationsOptions {
   convertToPropertyGetters?: boolean
 
   /**
+   * Function to determine whether a property should be moved from the class body
+   * to the prototype assignment object. If the other checks using decorators
+   * and `prototypeProperties` are exhausted, this function will be called
+   * and can decide the move as the last check.
+   */
+  shouldMoveProperty?: (options: {
+    propertyDefinition: Record<string, unknown>,
+    classDeclaration: Record<string, unknown>
+  }) => boolean
+
+  /**
    * Whether to set the name of the class constructor to the class name
    * to preserve it after minification.
    * Default: true

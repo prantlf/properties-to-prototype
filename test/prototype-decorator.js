@@ -164,3 +164,27 @@ Object.assign(Test.prototype, {
 `
   strictEqual(actual.trim(), expected.trim())
 })
+
+test('moves property by recognition function', () => {
+  const input = `
+class Test {
+  shared = []
+}
+`
+  const program = parse(input, { next: true })
+  const { updated } = updateClassDeclarations(program, {
+    shouldMoveProperty({ propertyDefinition }) {
+      return propertyDefinition.key.name === 'shared'
+    },
+    ensureConstructorName: false
+  })
+  ok(updated)
+  var actual = generate(program)
+  const expected = `
+class Test {}
+Object.assign(Test.prototype, {
+  shared: []
+});
+`
+  strictEqual(actual.trim(), expected.trim())
+})
