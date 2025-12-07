@@ -100,6 +100,21 @@ interface UpdateClassDeclarationsOptions {
   convertToPropertyGetters?: boolean
 
   /**
+   * Function to compute the class type and optionally to customise the properties
+   * for moving from the class declaration to the prototype.
+   */
+  classifyClass?: (options: {
+    classDeclaration: Record<string, unknown>,
+    classType?: string,
+    prototypeProperties: Record<string, string[]>,
+    prototypePropertyNames: string[],
+    programScope: Record<string, unknown>
+  }) => {
+    classType?: string,
+    prototypePropertyNames?: string[]
+  }
+
+  /**
    * Function to determine whether a property should be moved from the class body
    * to the prototype assignment object. If the other checks using decorators
    * and `prototypeProperties` are exhausted, this function will be called
@@ -107,7 +122,8 @@ interface UpdateClassDeclarationsOptions {
    */
   shouldMoveProperty?: (options: {
     propertyDefinition: Record<string, unknown>,
-    classDeclaration: Record<string, unknown>
+    classDeclaration: Record<string, unknown>,
+    programScope: Record<string, unknown>
   }) => boolean
 
   /**

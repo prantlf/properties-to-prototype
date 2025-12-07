@@ -165,7 +165,7 @@ Object.assign(Test.prototype, {
   strictEqual(actual.trim(), expected.trim())
 })
 
-test('moves property by recognition function', () => {
+test('moves property by property recognition function', () => {
   const input = `
 class Test {
   shared = []
@@ -185,6 +185,79 @@ class Test {}
 Object.assign(Test.prototype, {
   shared: []
 });
+`
+  strictEqual(actual.trim(), expected.trim())
+})
+
+test('moves property by class classification function', () => {
+  const input = `
+class Test {
+  defaults = {}
+}
+`
+  const program = parse(input, { next: true })
+  const { updated } = updateClassDeclarations(program, {
+    classifyClass({ classDeclaration }) {
+      const classType = classDeclaration.id?.name === 'Test' && 'model'
+      return { classType }
+    },
+    ensureConstructorName: false
+  })
+  ok(updated)
+  var actual = generate(program)
+  const expected = `
+class Test {}
+Object.assign(Test.prototype, {
+  defaults: {}
+});
+`
+  strictEqual(actual.trim(), expected.trim())
+})
+
+test('moves property by class classification function and custom properties', () => {
+  const input = `
+class Test {
+  shared = []
+}
+`
+  const program = parse(input, { next: true })
+  const { updated } = updateClassDeclarations(program, {
+    classifyClass({ classDeclaration }) {
+      const prototypePropertyNames = classDeclaration.id?.name === 'Test' && ['shared']
+      return { prototypePropertyNames }
+    },
+    ensureConstructorName: false
+  })
+  ok(updated)
+  var actual = generate(program)
+  const expected = `
+class Test {}
+Object.assign(Test.prototype, {
+  shared: []
+});
+`
+  strictEqual(actual.trim(), expected.trim())
+})
+
+test('does not move property by class classification function', () => {
+  const input = `
+class Test {
+  local = []
+}
+`
+  const program = parse(input, { next: true })
+  const { updated } = updateClassDeclarations(program, {
+    classifyClass() {
+      return { classType: 'other' }
+    },
+    ensureConstructorName: false
+  })
+  ok(!updated)
+  var actual = generate(program)
+  const expected = `
+class Test {
+  local = [];
+}
 `
   strictEqual(actual.trim(), expected.trim())
 })
