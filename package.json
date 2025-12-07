@@ -59,6 +59,9 @@
     "backbone",
     "marionette",
     "class",
-    "syntax"
+    "syntax",
+    "class-syntax",
+    "properties",
+    "prototype"
   ]
 }
