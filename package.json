@@ -1,6 +1,6 @@
 {
   "name": "properties-to-prototype",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Moves properties out of classes to prototypes, ensures not minified class name.",
   "author": "Ferdinand Prantl <prantlf@gmail.com>",
   "license": "MIT",
