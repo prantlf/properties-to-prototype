@@ -1,37 +1,9 @@
 interface UpdateClassDeclarationsOptions {
   /**
    * Names of properties to move from the class body to a prototype assignment
-   * object by default according to the class type.
-   * Default: {
-   *   model: [
-   *     'cidPrefix', 'defaults', 'idAttribute', 'url', 'urlRoot'
-   *   ],
-   *   collection: [
-   *     'cidPrefix', 'model', 'comparator'
-   *   ],
-   *   router: [
-   *     'cidPrefix', 'routes', 'appRoutes', 'controller'
-   *   ],
-   *   controller: [
-   *     'cidPrefix', 'options', 'channelName', 'radioEvents', 'radioRequests'
-   *   ],
-   *   view: [
-   *     'cidPrefix', 'options', 'tagName', 'className', 'attributes', 'template',
-   *     'el', 'ui', 'regions', 'behaviors', 'templateContext', 'templateHelpers',
-   *     'events', 'modelEvents', 'collectionEvents', 'triggers',
-   *     'childViewContainer', 'childView', 'childViewOptions',
-   *     'childViewEventPrefix', 'childViewEvents', 'childViewTriggers',
-   *     'emptyView', 'emptyViewOptions',
-   *     'viewComparator', 'sortWithCollection', 'reorderOnSort', 'viewFilter'
-   *   ],
-   *   behavior: [
-   *     'options', 'behaviors', 'ui', 'childViewEvents', 'childViewTriggers',
-   *     'events', 'modelEvents', 'collectionEvents', 'triggers'
-   *   ],
-   *   application: [
-   *     'cidPrefix', 'region', 'regionClass'
-   *   ]
-   * }
+   * object by default according to the class type. The structure is an object
+   * with class types as keys and arrays of property names as values.
+   * Default: {}
    */
   prototypeProperties?: Record<string, string[]>
 

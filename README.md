@@ -2,7 +2,7 @@
 
 Moves properties out of classes to prototypes, ensures not minified class name.
 
-Works together with JavaScript AST processor hooks in [requirejs-esm] and [requirejs-esm-preprocessor], for example.
+Works together with JavaScript AST processor hooks in [requirejs-esm], [requirejs-esm-preprocessor] and [backbone-class-syntax], for example.
 
 ## Synopsis
 
@@ -84,7 +84,7 @@ npm i properties-to-prototype
 
 Call `updateClassDeclarations` to update an AST of a script:
 
-```ts
+```js
 import { readFile } from 'node:fs/promises'
 import { parse } from 'meriyah'
 import { generate } from 'astring'
@@ -100,7 +100,7 @@ if (updated) {
 
 | Option                         | Default                 | Description |
 |:-------------------------------|-------------------------|:------------|
-| prototypeProperties            |       see below         | Names of properties to move from the class body to a prototype assignment object by default according to the class type. |
+| prototypeProperties            |           {}            | Names of properties to move from the class body to a prototype assignment object by default according to the class type. |
 | alternativePrototypeProperties |           {}            | Properties in this object will be merged to the `prototypeProperties` option, replacing the same class types. |
 | additionalPrototypeProperties  |           {}            | Properties in this object will be merged to the `prototypeProperties` option, appending to the same class types. |
 | classDecorator                 | `propertiesToPrototype` | Identifier of the decorator for marking a class for property processing. |
@@ -155,15 +155,17 @@ class User extends Model {
 
 ## Prototype Properties
 
-Specific class types can have their well-know properties moved to prototype object assignment statement by default. Some of them are built-in as examples or a convenience for `Backbone` and `Marionette` users. Others can be pass to `updateClassDeclarations`.
+Specific class types can have their well-know properties moved to prototype object assignment statement by default. The structure is an object with class types as keys and arrays of property names as values. For example, for Backbone and Marionette:
 
-### model
+```js
+{
+  model: [
     'cidPrefix', 'defaults', 'idAttribute', 'url', 'urlRoot'
-
-### collection
+  ],
+  collection: [
     'cidPrefix', 'model', 'comparator'
-
-###  view
+  ],
+  view: [
     'cidPrefix', 'options', 'tagName', 'className', 'attributes', 'template',
     'el', 'ui', 'regions', 'behaviors', 'templateContext', 'templateHelpers',
     'events', 'modelEvents', 'collectionEvents', 'triggers',
@@ -171,19 +173,22 @@ Specific class types can have their well-know properties moved to prototype obje
     'childViewEventPrefix', 'childViewEvents', 'childViewTriggers',
     'emptyView', 'emptyViewOptions',
     'viewComparator', 'sortWithCollection', 'reorderOnSort', 'viewFilter'
-
-###  behavior
+  ],
+  behavior: [
     'options', 'behaviors', 'ui', 'childViewEvents', 'childViewTriggers',
     'events', 'modelEvents', 'collectionEvents', 'triggers'
-
-### router
+  ],
+  router: [
     'routes', 'appRoutes', 'controller'
-
-### controller
+  ],
+  controller: [
     'cidPrefix', 'options', 'channelName', 'radioEvents', 'radioRequests'
-
-### application
+  ],
+  application: [
     'cidPrefix', 'region', 'regionClass'
+  ]
+}
+```
 
 ## Contributing
 
@@ -197,3 +202,4 @@ Licensed under the MIT license.
 
 [requirejs-esm]: https://www.npmjs.com/package/requirejs-esm
 [requirejs-esm-preprocessor]: https://www.npmjs.com/package/requirejs-esm-preprocessor
+[backbone-class-syntax]: https://www.npmjs.com/package/backbone-class-syntax

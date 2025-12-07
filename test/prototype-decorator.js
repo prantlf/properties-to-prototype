@@ -197,6 +197,9 @@ class Test {
 `
   const program = parse(input, { next: true })
   const { updated } = updateClassDeclarations(program, {
+    prototypeProperties: {
+      model: ['defaults']
+    },
     classifyClass({ classDeclaration }) {
       const classType = classDeclaration.id?.name === 'Test' && 'model'
       return { classType }

@@ -15,6 +15,9 @@ class Test {
 `
   const program = parse(input, { next: true })
   const { updated } = updateClassDeclarations(program, {
+    prototypeProperties: {
+      model: ['defaults']
+    },
     ensureConstructorName: false
   })
   ok(updated)
@@ -37,6 +40,9 @@ class Test {
 `
   const program = parse(input, { next: true })
   const { updated } = updateClassDeclarations(program, {
+    prototypeProperties: {
+      model: ['defaults']
+    },
     classDecorator: 'moveProperties',
     ensureConstructorName: false
   })
@@ -79,6 +85,9 @@ class Test {
 `
   const program = parse(input, { next: true })
   const { updated } = updateClassDeclarations(program, {
+    prototypeProperties: {
+      model: ['defaults']
+    },
     alternativePrototypeProperties: {
       model: ['shared']
     },
@@ -107,6 +116,9 @@ class Test {
 `
   const program = parse(input, { next: true })
   const { updated } = updateClassDeclarations(program, {
+    prototypeProperties: {
+      model: ['defaults']
+    },
     additionalPrototypeProperties: {
       model: ['shared']
     },
