@@ -1,5 +1,11 @@
 # Changes
 
+## [2.1.0](https://github.com/prantlf/properties-to-prototype/compare/v2.0.0...v2.1.0) (2025-12-09)
+
+### Features
+
+* Recognise class type using String or RegExp ([4888c09](https://github.com/prantlf/properties-to-prototype/commit/4888c099c7d9cc77d216495f27656d1225c73fd4))
+
 ## [2.0.0](https://github.com/prantlf/properties-to-prototype/compare/v1.1.0...v2.0.0) (2025-12-07)
 
 ### Features
