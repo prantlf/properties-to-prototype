@@ -1,5 +1,11 @@
 # Changes
 
+## [2.2.0](https://github.com/prantlf/properties-to-prototype/compare/v2.1.0...v2.2.0) (2025-12-09)
+
+### Features
+
+* Enable processing of class name strings as suffixes ([1880079](https://github.com/prantlf/properties-to-prototype/commit/1880079ce9454a83fb9e7816b37cab20382be800))
+
 ## [2.1.0](https://github.com/prantlf/properties-to-prototype/compare/v2.0.0...v2.1.0) (2025-12-09)
 
 ### Features
