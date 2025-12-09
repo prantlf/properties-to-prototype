@@ -110,7 +110,10 @@ if (updated) {
 | instanceDecorator              |       `instance`        | Identifier of the decorator for forcing a class field to remain as a class field. |
 | removeInstanceDecorator        |         `true`          | Whether to remove the instance decorator after processing. |
 | convertToPropertyGetters       |         `false`         | Whether to replace property values with property getters instead of moving the properties to a prototype object assignment statement. |
-| shouldProcessClass             |                         | Function to determine whether a property should be moved from the class body to the prototype assignment object. |
+| classTypes                     |           {}            | Class names or regular expressions to infer the class type from. |
+| alternativeClassTypes          |           {}            | Properties in this object will be merged to the `classTypes` option, replacing the same class types. |
+| additionalClassTypes           |           {}            | Properties in this object will be merged to the `classTypes` option, appending to the same class types. |
+| classifyClass                  |                         | Function to compute the class type and optionally to customise the properties for moving from the class declaration to the prototype. |
 | shouldMoveProperty             |                         | Function to determine whether a property should be moved from the class body to the prototype assignment object. |
 | ensureConstructorNames         |         `true`          | Whether to set the name of the class constructor to the class name to preserve it after minification. |
 | replaceConstructorName         |         `false`         | Whether to replace the constructor name even if it already exists but has a different value. |

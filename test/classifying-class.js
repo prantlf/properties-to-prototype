@@ -6,7 +6,36 @@ import { updateClassDeclarations } from '../lib/index.js'
 
 const test = tehanu(import.meta.filename)
 
-test('does not move property by default', () => {
+test('moves property by string class type', () => {
+  const input = `
+class Test {
+  defaults = {}
+}
+`
+  const program = parse(input, { next: true })
+  const { updated } = updateClassDeclarations(program, {
+    prototypeProperties: {
+      model: ['defaults']
+    },
+    classTypes: {
+      model: [
+        'Test'
+      ]
+    },
+    ensureConstructorName: false
+  })
+  ok(updated)
+  var actual = generate(program)
+  const expected = `
+class Test {}
+Object.assign(Test.prototype, {
+  defaults: {}
+});
+`
+  strictEqual(actual.trim(), expected.trim())
+})
+
+test('does not move property by string class type', () => {
   const input = `
 class Test {
   local = []
@@ -14,6 +43,14 @@ class Test {
 `
   const program = parse(input, { next: true })
   const { updated } = updateClassDeclarations(program, {
+    prototypeProperties: {
+      model: ['defaults']
+    },
+    classTypes: {
+      model: [
+        'Other'
+      ]
+    },
     ensureConstructorName: false
   })
   ok(!updated)
@@ -26,109 +63,78 @@ class Test {
   strictEqual(actual.trim(), expected.trim())
 })
 
-test('does not move static property', () => {
+test('moves property by regexp class type', () => {
   const input = `
 class Test {
-  @prototype
-  static local = []
+  defaults = {}
 }
 `
   const program = parse(input, { next: true })
   const { updated } = updateClassDeclarations(program, {
+    prototypeProperties: {
+      model: ['defaults']
+    },
+    classTypes: {
+      model: [
+        /est$/
+      ]
+    },
+    ensureConstructorName: false
+  })
+  ok(updated)
+  var actual = generate(program)
+  const expected = `
+class Test {}
+Object.assign(Test.prototype, {
+  defaults: {}
+});
+`
+  strictEqual(actual.trim(), expected.trim())
+})
+
+test('does not move property by regexp class type', () => {
+  const input = `
+class Test {
+  local = []
+}
+`
+  const program = parse(input, { next: true })
+  const { updated } = updateClassDeclarations(program, {
+    prototypeProperties: {
+      model: ['defaults']
+    },
+    classTypes: {
+      model: [
+        /MyTest/
+      ]
+    },
     ensureConstructorName: false
   })
   ok(!updated)
   var actual = generate(program)
   const expected = `
 class Test {
-  static local = [];
+  local = [];
 }
 `
   strictEqual(actual.trim(), expected.trim())
 })
 
-test('moves property by decorator', () => {
-  const input = `
-export class Test {
-  @prototype
-  shared = []
-}
-`
-  const program = parse(input, { sourceType: 'module', next: true })
-  const { updated } = updateClassDeclarations(program, {
-    ensureConstructorName: false
-  })
-  ok(updated)
-  var actual = generate(program)
-  const expected = `
-export class Test {}
-Object.assign(Test.prototype, {
-  shared: []
-});
-`
-  strictEqual(actual.trim(), expected.trim())
-})
-
-test('replaces property by getter instead of moving it', () => {
-  const input = `
-export class Test {
-  @prototype
-  shared = []
-}
-`
-  const program = parse(input, { sourceType: 'module', next: true })
-  const { updated } = updateClassDeclarations(program, {
-    convertToPropertyGetters: true,
-    ensureConstructorName: false
-  })
-  ok(updated)
-  var actual = generate(program)
-  const expected = `
-export class Test {
-  get shared() {
-    return [];
-  }
-}
-`
-  strictEqual(actual.trim(), expected.trim())
-})
-
-test('moves property to existing prototype assignment', () => {
-  const input = `
-export default class Test {
-  @prototype
-  shared = []
-}
-Object.assign(Test.prototype, {
-  existing: {}
-})
-`
-  const program = parse(input, { sourceType: 'module', next: true })
-  const { updated } = updateClassDeclarations(program, {
-    ensureConstructorName: false
-  })
-  ok(updated)
-  var actual = generate(program)
-  const expected = `
-export default class Test {}
-Object.assign(Test.prototype, {
-  existing: {},
-  shared: []
-});
-`
-  strictEqual(actual.trim(), expected.trim())
-})
-
-test('does not remove prototype decorator if requested', () => {
+test('moves property by class classification function', () => {
   const input = `
 class Test {
-  @prototype
-  shared = []
+  defaults = {}
 }
 `
   const program = parse(input, { next: true })
   const { updated } = updateClassDeclarations(program, {
-    removePrototypeDecorator: false,
+    prototypeProperties: {
+      model: ['defaults']
+    },
+    classifyClass({ classDeclaration }) {
+      const classType = classDeclaration.id?.name === 'Test' && 'model'
+      return { classType }
+    },
     ensureConstructorName: false
   })
   ok(updated)
@@ -136,36 +142,13 @@ class Test {
   const expected = `
 class Test {}
 Object.assign(Test.prototype, {
-  shared: []
+  defaults: {}
 });
 `
   strictEqual(actual.trim(), expected.trim())
 })
 
-test('moves property by custom decorator', () => {
-  const input = `
-class Test {
-  @move
-  shared = []
-}
-`
-  const program = parse(input, { next: true })
-  const { updated } = updateClassDeclarations(program, {
-    prototypeDecorator: 'move',
-    ensureConstructorName: false
-  })
-  ok(updated)
-  var actual = generate(program)
-  const expected = `
-class Test {}
-Object.assign(Test.prototype, {
-  shared: []
-});
-`
-  strictEqual(actual.trim(), expected.trim())
-})
-
-test('moves property by property recognition function', () => {
+test('moves property by class classification function and custom properties', () => {
   const input = `
 class Test {
   shared = []
@@ -173,8 +156,9 @@ class Test {
 `
   const program = parse(input, { next: true })
   const { updated } = updateClassDeclarations(program, {
-    shouldMoveProperty({ propertyDefinition }) {
-      return propertyDefinition.key.name === 'shared'
+    classifyClass({ classDeclaration }) {
+      const prototypePropertyNames = classDeclaration.id?.name === 'Test' && ['shared']
+      return { prototypePropertyNames }
     },
     ensureConstructorName: false
   })
@@ -185,6 +169,29 @@ class Test {}
 Object.assign(Test.prototype, {
   shared: []
 });
+`
+  strictEqual(actual.trim(), expected.trim())
+})
+
+test('does not move property by class classification function', () => {
+  const input = `
+class Test {
+  local = []
+}
+`
+  const program = parse(input, { next: true })
+  const { updated } = updateClassDeclarations(program, {
+    classifyClass() {
+      return { classType: 'other' }
+    },
+    ensureConstructorName: false
+  })
+  ok(!updated)
+  var actual = generate(program)
+  const expected = `
+class Test {
+  local = [];
+}
 `
   strictEqual(actual.trim(), expected.trim())
 })

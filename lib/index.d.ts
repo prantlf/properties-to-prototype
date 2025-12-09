@@ -72,8 +72,36 @@ interface UpdateClassDeclarationsOptions {
   convertToPropertyGetters?: boolean
 
   /**
+   * Class names or regular expressions to infer the class type from. The structure
+   * is an object with class types as keys and arrays of strings or regular
+   * expressions as values to match against the class declarations.
+   * Default: {}
+   */
+  classTypes?: Record<string, (string | RegExp)[]>
+
+  /**
+   * Alternative class names or regular expressions to infer the class type from.
+   * This object will be merged to the `classTypes` option and it's expected
+   * to have the same structure. If the same key is defined in both objects,
+   * the values (arrays of strings or regular expressions) from the `alternativeClassTypes`
+   * option will replace the original values from the `classTypes` option.
+   * Default: {}
+   */
+  alternativeClassTypes?: Record<string, (string | RegExp)[]>
+
+  /**
+   * Additional class names or regular expressions to infer the class type from.
+   * This object will be merged to the `classTypes` option and it's expected
+   * to have the same structure. If the same key is defined in both objects,
+   * the values (arrays of strings or regular expressions) will be concatenated.
+   * Default: {}
+   */
+  additionalClassTypes?: Record<string, (string | RegExp)[]>
+
+  /**
    * Function to compute the class type and optionally to customise the properties
    * for moving from the class declaration to the prototype.
+   * Default: undefined
    */
   classifyClass?: (options: {
     classDeclaration: Record<string, unknown>,
@@ -91,6 +119,7 @@ interface UpdateClassDeclarationsOptions {
    * to the prototype assignment object. If the other checks using decorators
    * and `prototypeProperties` are exhausted, this function will be called
    * and can decide the move as the last check.
+   * Default: undefined
    */
   shouldMoveProperty?: (options: {
     propertyDefinition: Record<string, unknown>,
