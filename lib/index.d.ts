@@ -80,6 +80,12 @@ interface UpdateClassDeclarationsOptions {
   classTypes?: Record<string, (string | RegExp)[]>
 
   /**
+   * Use the strings with class names as suffixes (endsWith) instead of full names (===).
+   * Default: false
+   */
+  classTypesByEnds?: boolean
+
+  /**
    * Alternative class names or regular expressions to infer the class type from.
    * This object will be merged to the `classTypes` option and it's expected
    * to have the same structure. If the same key is defined in both objects,

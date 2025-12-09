@@ -111,6 +111,7 @@ if (updated) {
 | removeInstanceDecorator        |         `true`          | Whether to remove the instance decorator after processing. |
 | convertToPropertyGetters       |         `false`         | Whether to replace property values with property getters instead of moving the properties to a prototype object assignment statement. |
 | classTypes                     |           {}            | Class names or regular expressions to infer the class type from. |
+| classTypesByEnds               |         `false`         | Use the strings with class names as suffixes (endsWith) instead of full names (===). |
 | alternativeClassTypes          |           {}            | Properties in this object will be merged to the `classTypes` option, replacing the same class types. |
 | additionalClassTypes           |           {}            | Properties in this object will be merged to the `classTypes` option, appending to the same class types. |
 | classifyClass                  |                         | Function to compute the class type and optionally to customise the properties for moving from the class declaration to the prototype. |

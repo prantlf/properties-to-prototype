@@ -35,6 +35,36 @@ Object.assign(Test.prototype, {
   strictEqual(actual.trim(), expected.trim())
 })
 
+test('moves property by string class type as suffix', () => {
+  const input = `
+class Test {
+  defaults = {}
+}
+`
+  const program = parse(input, { next: true })
+  const { updated } = updateClassDeclarations(program, {
+    prototypeProperties: {
+      model: ['defaults']
+    },
+    classTypes: {
+      model: [
+        'est'
+      ]
+    },
+    classTypesByEnds: true,
+    ensureConstructorName: false
+  })
+  ok(updated)
+  var actual = generate(program)
+  const expected = `
+class Test {}
+Object.assign(Test.prototype, {
+  defaults: {}
+});
+`
+  strictEqual(actual.trim(), expected.trim())
+})
+
 test('does not move property by string class type', () => {
   const input = `
 class Test {
