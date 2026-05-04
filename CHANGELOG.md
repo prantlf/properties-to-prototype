@@ -1,5 +1,11 @@
 # Changes
 
+## [2.3.0](https://github.com/prantlf/properties-to-prototype/compare/v2.2.0...v2.3.0) (2026-05-04)
+
+### Features
+
+* Upgrade dependencies ([7f7fff9](https://github.com/prantlf/properties-to-prototype/commit/7f7fff9c1711569ee822972180b302156a15b50d))
+
 ## [2.2.0](https://github.com/prantlf/properties-to-prototype/compare/v2.1.0...v2.2.0) (2025-12-09)
 
 ### Features
